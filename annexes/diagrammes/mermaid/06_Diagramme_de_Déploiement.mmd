@@ -1,0 +1,87 @@
+graph TB
+    subgraph Internet["🌐 INTERNET"]
+        USER[👥 Utilisateurs]
+    end
+    
+    subgraph GCP["☁️ GOOGLE CLOUD PLATFORM - VPC"]
+        subgraph PublicSubnet["🔓 Public Subnet"]
+            LB[⚖️ Cloud Load Balancer<br/>SSL/TLS Termination]
+            CDN[🚀 Cloud CDN<br/>Assets Statiques]
+        end
+        
+        subgraph PrivateSubnet["🔒 Private Subnet"]
+            subgraph GKE["🐳 Google Kubernetes Engine"]
+                NGINX[🔧 NGINX Ingress<br/>Reverse Proxy]
+                
+                subgraph Pods["📦 Application Pods"]
+                    BACKEND1[🖥️ Backend Pod 1<br/>FastAPI]
+                    BACKEND2[🖥️ Backend Pod 2<br/>FastAPI]
+                    BACKEND3[🖥️ Backend Pod 3<br/>FastAPI]
+                end
+                
+                HPA[📊 Horizontal Pod<br/>Autoscaler]
+            end
+            
+            REDIS[(🔴 Redis Memorystore<br/>Cache Session)]
+        end
+        
+        subgraph ManagedServices["🛠️ Services Gérés"]
+            MONGO[(🍃 MongoDB Atlas M10<br/>Multi-AZ Replica)]
+            STORAGE[📁 Cloud Storage<br/>Audio + Fichiers]
+            SECRET[🔐 Secret Manager<br/>API Keys]
+        end
+        
+        subgraph Monitoring["📡 Monitoring"]
+            PROM[📈 Prometheus]
+            GRAF[📊 Grafana]
+            ALERT[🚨 Cloud Monitoring<br/>Alertes]
+        end
+    end
+    
+    subgraph External["🌍 Services Externes"]
+        GEMINI[🤖 Gemini AI API]
+        STT[🎤 Google Cloud<br/>Speech-to-Text]
+        TTS[🔊 Google Cloud<br/>Text-to-Speech]
+    end
+    
+    USER --> LB
+    USER --> CDN
+    LB --> NGINX
+    CDN --> STORAGE
+    NGINX --> BACKEND1
+    NGINX --> BACKEND2
+    NGINX --> BACKEND3
+    
+    BACKEND1 --> REDIS
+    BACKEND2 --> REDIS
+    BACKEND3 --> REDIS
+    
+    BACKEND1 --> MONGO
+    BACKEND2 --> MONGO
+    BACKEND3 --> MONGO
+    
+    BACKEND1 --> STORAGE
+    BACKEND2 --> STORAGE
+    BACKEND3 --> STORAGE
+    
+    BACKEND1 --> SECRET
+    BACKEND2 --> SECRET
+    BACKEND3 --> SECRET
+    
+    BACKEND1 --> GEMINI
+    BACKEND1 --> STT
+    BACKEND1 --> TTS
+    
+    HPA -.->|Auto-scale| Pods
+    
+    BACKEND1 --> PROM
+    PROM --> GRAF
+    PROM --> ALERT
+    
+    style USER fill:#FFE5B4
+    style LB fill:#C8E6C9
+    style GKE fill:#E3F2FD
+    style MONGO fill:#A5D6A7
+    style GEMINI fill:#FFCDD2
+    style PROM fill:#FFF9C4
+    

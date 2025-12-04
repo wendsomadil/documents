@@ -1,0 +1,46 @@
+classDiagram
+    direction RL
+    
+    class User {
+        + str user_id
+        + str email
+        + str role
+        + datetime created_at
+    }
+    
+    class ChatHistory {
+        + str session_id
+        + str user_id
+        + List~Message~ messages
+    }
+    
+    class Message {
+        + str role (user/ai)
+        + str content
+        + datetime timestamp
+    }
+    
+    class RAGService {
+        + VectorStore vdb_instance
+        + LLMClient gemini_client
+        + List~DocumentChunk~ retrieve(query)
+        + str generate_response(prompt)
+    }
+    
+    class VectorStore {
+        + faiss_index
+        + List~DocumentChunk~ search(embedding)
+    }
+    
+    class MongoDBRepository {
+        + connect()
+        + save_history(session)
+        + get_user(user_id)
+    }
+    
+    User "1" <-- "0..*" ChatHistory : possède
+    ChatHistory "1" -- "1..*" Message : contient
+    RAGService "1" --> "1" VectorStore : utilise
+    
+    note for RAGService "Implémente la logique RAG (Retrieval) \n et appelle l'API LLM."
+    

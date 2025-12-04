@@ -1,0 +1,44 @@
+graph TB
+    subgraph "Couche Présentation"
+        A[👤 Utilisateur] --> B[💻 Frontend React]
+    end
+    
+    subgraph "Couche API"
+        B --> C[🔌 API Gateway FastAPI]
+        C --> D[🔐 Auth JWT/OAuth2]
+    end
+    
+    subgraph "Couche Services Backend"
+        D --> E[🧠 Chat Service]
+        E --> F[🔍 RAG Engine]
+        F --> G[📚 Document Processor]
+        G --> H[✂️ Text Chunker]
+        H --> I[🧬 Embeddings Generator]
+    end
+    
+    subgraph "Couche Stockage Vectoriel"
+        I --> J[(💾 FAISS Vector Store<br/>768 dimensions)]
+        J --> K[🔎 Similarity Search Top-5]
+    end
+    
+    subgraph "Couche IA Générative"
+        K --> L[🤖 Google Gemini 2.0 Flash]
+        L --> M[✅ Anti-Hallucination Validator]
+    end
+    
+    subgraph "Couche Données"
+        M --> N[(🗄️ MongoDB Atlas<br/>Users, Messages, Tickets)]
+        E --> N
+    end
+    
+    M --> O[📤 Réponse Finale]
+    O --> B
+    
+    style A fill:#FFE5B4
+    style B fill:#E3F2FD
+    style C fill:#C8E6C9
+    style F fill:#F3E5F5
+    style J fill:#FFF9C4
+    style L fill:#FFCDD2
+    style N fill:#FFE0B2
+    

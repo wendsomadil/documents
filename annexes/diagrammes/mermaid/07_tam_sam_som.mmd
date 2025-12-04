@@ -1,0 +1,26 @@
+graph TB
+    subgraph TAM["🌍 TAM - Total Addressable Market"]
+        A["5.42M utilisateurs Internet<br/>100% Fintech Burkina Faso"]
+    end
+    
+    subgraph SAM["🎯 SAM - Serviceable Addressable Market"]
+        B["1.8M - 2.4M utilisateurs<br/>60% du TAM<br/>Plateformes financières actives"]
+    end
+    
+    subgraph SOM["🚀 SOM - Serviceable Obtainable Market"]
+        C1["Année 1: 50k-100k utilisateurs<br/>2-5% SAM"]
+        C2["Année 2: 200k-400k utilisateurs<br/>10-15% SAM"]
+        C3["Année 3: 500k-800k utilisateurs<br/>25-30% SAM"]
+    end
+    
+    A --> B
+    B --> C1
+    C1 --> C2
+    C2 --> C3
+    
+    style A fill:#FFCDD2
+    style B fill:#FFF9C4
+    style C1 fill:#C8E6C9
+    style C2 fill:#A5D6A7
+    style C3 fill:#81C784
+    

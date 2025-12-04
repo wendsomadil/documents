@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant U as Utilisateur
+    participant F as Frontend (React)
+    participant B as Backend (FastAPI)
+    participant C as Redis Cache
+    participant RAG as Service RAG
+    participant VDB as Vector DB (FAISS)
+    participant LLM as Gemini 2.0 Flash
+    participant DB as MongoDB
+
+    U->>F: Requête (ex: "Comment faire un virement ?")
+    F->>B: Requête API POST /chat
+    
+    B->>C: Vérifier le cache (clé utilisateur + requête)
+    alt Cache HIT
+        C-->>B: Réponse mise en cache
+        B-->>F: Réponse (Rapide)
+    else Cache MISS
+        B->>RAG: Préparer la requête (Historique + Question)
+        RAG->>VDB: Recherche de documents (Matching sémantique)
+        VDB-->>RAG: Documents pertinents (Chunks)
+        
+        RAG->>LLM: Prompt final (Question + Contexte RAG)
+        LLM-->>RAG: Réponse structurée
+        
+        RAG-->>B: Réponse
+        B->>C: Mettre la réponse en cache
+        B->>DB: Sauvegarder l'interaction (Historique de chat)
+        B-->>F: Réponse
+    end
+    
+    F-->>U: Afficher la réponse
+    

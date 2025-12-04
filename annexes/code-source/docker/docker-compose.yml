@@ -1,0 +1,61 @@
+# docker/docker-compose.yml
+version: '3.8'
+
+services:
+  # Backend FastAPI
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: zamapay_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017
+      - REDIS_URL=redis://redis:6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - ../backend:/app
+      - ../storage:/app/storage
+    depends_on:
+      - mongo
+      - redis
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend React
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: zamapay_frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
+    depends_on:
+      - backend
+
+  # MongoDB
+  mongo:
+    image: mongo:7.0
+    container_name: zamapay_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=zamapay_db
+
+  # Redis (Cache)
+  redis:
+    image: redis:7-alpine
+    container_name: zamapay_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mongo_data:
+  redis_data:
+  

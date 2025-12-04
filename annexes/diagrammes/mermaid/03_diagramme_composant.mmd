@@ -1,0 +1,36 @@
+flowchart TD
+    subgraph "Environnement de Développement (Docker Compose)"
+        
+        subgraph "Machine Hôte (Local)"
+            LB[Load Balancer Virtuel]
+        end
+        
+        subgraph "Réseau Docker"
+            DB(MongoDB:27017)
+            Cache(Redis Cache:6379)
+            API(Backend FastAPI:8000)
+            UI(Frontend React:3000)
+        end
+        
+        LB --> UI
+        UI --> API
+        API --> DB
+        API --> Cache
+    end
+    
+    style LB fill:#60A5FA,stroke:#333
+    style UI fill:#A7F3D0,stroke:#333
+    style API fill:#68D391,stroke:#333
+    style Cache fill:#FCD34D,stroke:#333
+    style DB fill:#F9A8D4,stroke:#333
+    
+    subgraph "Volumes de Données"
+        VDB["Volume Persistant: mongo_data"]
+        DB --> VDB
+    end
+    
+    subgraph "Liens Externes"
+        ExternalAI["Gemini 2.0 Flash API"]
+        API --> ExternalAI
+    end
+    
